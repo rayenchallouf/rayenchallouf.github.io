@@ -14,9 +14,9 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Chirpy # the main title
+title: akolix # the main title
 
-tagline: A text-focused Jekyll theme # it will display as the subtitle
+tagline: akolix # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
@@ -34,7 +34,7 @@ twitter:
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: your_full_name
+  name: Rayen Challouf # change to your name
   email: example@domain.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
@@ -45,7 +45,7 @@ social:
     # - https://www.linkedin.com/in/username
 
 # Site Verification Settings
-webmaster_verifications:
+webmaster_verifications:s
   google: # fill in your Google verification code
   bing: # fill in your Bing verification code
   alexa: # fill in your Alexa verification code
@@ -98,8 +98,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
-
+avatar:https://media.licdn.com/dms/image/v2/D4D03AQELEAjPNjs_fg/profile-displayphoto-shrink_800_800/B4DZPGw3qaGoAc-/0/1734206521110?e=1752710400&v=beta&t=KmZZ9SnxrWXrIdiIrO7SGWQscEWnlUFJBuzGM2tmgyM
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
 social_preview_image: # string, local or CORS resources
