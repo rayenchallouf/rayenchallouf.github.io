@@ -1,5 +1,5 @@
 ---
-title: Mr Robot1
+title: Pickle Rick
 categories: [TryHackMe]
 tags: [Linux, medium,]
 image: images/Mr Robot/Mr Robot.png
