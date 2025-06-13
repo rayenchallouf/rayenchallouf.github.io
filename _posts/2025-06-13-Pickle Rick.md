@@ -32,7 +32,7 @@ Look for ports such as:
 ●**Port 22** (SSH): Useful later for remote access.
 
 we do a little nmap scan on the given IP address and discover
-![Rick](../Images/Rick/nmap.png)
+![Pickle-Rick](../Images/Rick/nmap.png)
 
 # 2. Web Enumeration :
 
