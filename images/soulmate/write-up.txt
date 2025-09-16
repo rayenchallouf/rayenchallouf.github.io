@@ -1,0 +1,8 @@
+
+navigate to the user ben using his credential.
+
+go to the orginal domain soulmate.htb/rev.php
+
+Notice that root has previously run a login script
+
+Check the port opening status and find that the Erlang-based SSH service is running on port 2222
