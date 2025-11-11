@@ -75,13 +75,6 @@ The working script used to solve the challenge is included with the challenge su
 
 This task is a good example of a parameter-recovery challenge for small-weight secrets in an RLWE-like setting. The combined use of simple polynomial arithmetic and a targeted brute-force on the sparse secret yields a fast and reliable recovery for the given parameters.
 
----
-
-*If you want, I can:*
-
-* attach the exact `A, t, u, v` vectors and full output of the script in the document,
-* or adapt the script to try different assumed Hamming weights (e.g., `hw = 1`..`3`) and include those runs and results.
-
 This is the solve.py
 ```python
 
