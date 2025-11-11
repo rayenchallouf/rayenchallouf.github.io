@@ -1,6 +1,6 @@
 ---
 
-title: BayB Parameters
+title: Baby_Parameters
 categories: [CTF, Crypto]
 tags: [lattice, rlwe, crypto, medium]
 image: images/crypto/baby_Parmeters.png
