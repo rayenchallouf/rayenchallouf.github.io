@@ -4,7 +4,7 @@ title: Baby_Parameters
 categories: [CTF, Crypto]
 tags: [lattice, rlwe, crypto, medium]
 image: images/crypto/baby_Parmeters.png
----------------------------
+---
 
 # Baby — Parameter Recovery & Flag Extraction
 
