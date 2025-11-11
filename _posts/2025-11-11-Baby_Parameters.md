@@ -6,7 +6,7 @@ tags: [lattice, rlwe, crypto, medium]
 image: images/crypto/baby_Parmeters.png
 ---------------------------
 
-# BayB — Parameter Recovery & Flag Extraction
+# Baby — Parameter Recovery & Flag Extraction
 
 This write-up describes how I solved the **Baby_paramters** challenge (parameter recovery / small-error RLWE-style problem) and recovered the flag. The solution uses a small brute-force search over sparse secret vectors and a few simple polynomial operations — the full working script is provided and explained.
 
