@@ -7,7 +7,7 @@ image: images/Artificial/Artificial.png
 
 # Artificial - HackTheBox Write-Up
 
-**Artificial** is a medium Linux machine on HackTheBox that revolves around exploiting a TensorFlow model-loading vulnerability to gain RCE, pivoting through an exposed internal service, and eventually retrieving root by leveraging misconfigurations. This write-up follows the same structure and style as *2025-11-11-Environment.md*.
+**Artificial** is a medium Linux machine on HackTheBox that revolves around exploiting a TensorFlow model-loading vulnerability to gain RCE, pivoting through an exposed internal service, and eventually retrieving root by leveraging misconfigurations.
 
 ---
 
